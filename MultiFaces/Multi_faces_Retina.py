@@ -20,7 +20,7 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(level
 logger = logging.getLogger(__name__)
 
 # Configuration
-DB_URL = "postgresql://postgres:AshlinJoelSizzin@localhost:5432/face_detection_db"  # FIXED: Proper < operator
+DB_URL = "postgresql://postgres:Password@localhost:5432/face_detection_db"  # FIXED: Proper < operator
 USER_IMG_DIR = "user_images"
 ACTOR_IMG_DIR = "actor_uploads"
 YOLOV8_FACE_WEIGHTS = "yolov8x-face-lindevs.pt"
