@@ -14,7 +14,7 @@ import hashlib
 import bcrypt
 from pathlib import Path
 
-DB_URL = "postgresql://postgres:AshlinJoelSizzin@localhost:5432/face_detection_db"  # <-- PUT your password!
+DB_URL = "postgresql://postgres:Password@localhost:5432/face_detection_db"  # <-- PUT your password!
 USER_IMG_DIR = "user_images"
 ACTOR_IMG_DIR = "actor_uploads"
 YOLOV8_FACE_WEIGHTS = "yolov8x-face-lindevs.pt"
