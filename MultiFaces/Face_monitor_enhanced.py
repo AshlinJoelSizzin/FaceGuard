@@ -19,7 +19,7 @@ from huggingface_hub import hf_hub_download
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-DB_URL = "postgresql://postgres:AshlinJoelSizzin@localhost:5432/face_detection_db"
+DB_URL = "postgresql://postgres:Password@localhost:5432/face_detection_db"
 USER_IMG_DIR = "user_images"
 ACTOR_IMG_DIR = "actor_uploads"
 YOLOV8_FACE_WEIGHTS = r"C:\Users\surya\OneDrive\Documents\Patent\Face Guard\yolov8x-face-lindevs.pt"
