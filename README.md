@@ -2,7 +2,7 @@
 
 FaceGuard is a face detection and monitoring system that uses YOLOv8-based face detection and InsightFace (ArcFace) embeddings to continuously monitor uploaded images and alert registered users when their face appears in potentially malicious content.
 
-# Table of Contents
+## Table of Contents
 - [Overview](#overview)
 - [Key Features](#key-features)
 - [System Architecture](#system-architecture)
@@ -17,13 +17,29 @@ FaceGuard is a face detection and monitoring system that uses YOLOv8-based face 
 - [Monitoring & Alerts](#monitoring-n-alerts)
 - [Troubleshooting](#troubleshooting)
 
-## Features
+## Overview
 
-- User registration with face image
-- Face detection in uploaded images
-- Match detection against registered users
-- Web interface for easy interaction
-- PostgreSQL database with vector similarity search
+FaceGuard enables users to register their face once and then continuously monitors new uploads for matches against their stored embeddings. When a match exceeding a configured similarity threshold is detected, the system logs the event, associates it with a potential bad actor, and sends a real-time security alert email to the affected user. This allows individuals to detect and respond quickly if their face is used in harmful or unauthorized images.
+
+## Key Features
+
+- User registration with face image and metadata.
+- Multi-model face detection (RetinaFace, SCRFD/YOLOv8-face, MTCNN).
+- Embedding extraction using InsightFace (ArcFace).
+- Vector similarity search using PostgreSQL + pgvector + FAISS.
+- Web-based interface for registration, uploads, and viewing detections.
+- Detection history and bad-actor tracking (IP, upload count, timestamps).
+- Real-time notification via email on suspicious detections.
+
+## System Architecture
+
+- The system follows a layered architecture with clear separation between input, processing, feature extraction, matching, storage, and notification.
+- **Input Layer**: FastAPI endpoints for registering users, uploading images, fetching detections, and health checks.
+- **Processing Layer**: Ensemble of detectors (RetinaFace, SCRFD/YOLO, MTCNN) plus advanced preprocessing (CLAHE, denoising, deduplication, quality checks, bounding box expansion).
+- **Feature Extraction Layer**: InsightFace (ArcFace) generates robust 512-D embeddings for detected faces.
+- **Matching Layer**: FAISS and pgvector perform fast similarity search with adaptive thresholds and CPU fallback logic.
+- **Storage Layer**: PostgreSQL tables for users, user_face_profiles, uploads, detections, and bad_actors.
+- **Notification Layer**: SMTP-based email alerts and extendable hooks for SMS/push notifications.
 
 ## Prerequisites
 
