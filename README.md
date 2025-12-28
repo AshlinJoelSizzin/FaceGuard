@@ -17,10 +17,12 @@ FaceGuard is a face detection and monitoring system that uses YOLOv8-based face 
 - [Monitoring & Alerts](#monitoring-n-alerts)
 - [Troubleshooting](#troubleshooting)
 
+<a name="overview"></a>
 ## Overview
 
 FaceGuard enables users to register their face once and then continuously monitors new uploads for matches against their stored embeddings. When a match exceeding a configured similarity threshold is detected, the system logs the event, associates it with a potential bad actor, and sends a real-time security alert email to the affected user. This allows individuals to detect and respond quickly if their face is used in harmful or unauthorized images.
 
+<a name="key-features"></a>
 ## Key Features
 
 - User registration with face image and metadata.
@@ -31,6 +33,7 @@ FaceGuard enables users to register their face once and then continuously monito
 - Detection history and bad-actor tracking (IP, upload count, timestamps).
 - Real-time notification via email on suspicious detections.
 
+<a name="system-architecture"></a>
 ## System Architecture
 
 - The system follows a layered architecture with clear separation between input, processing, feature extraction, matching, storage, and notification.
@@ -42,21 +45,35 @@ FaceGuard enables users to register their face once and then continuously monito
 - **Notification Layer**: SMTP-based email alerts and extendable hooks for SMS/push notifications.
 <img width="975" height="623" alt="image" src="https://github.com/user-attachments/assets/119de341-cc88-4c57-8b4b-57f0dbe71fe8" />
 
+<a name="how-it-works"></a>
 ## How It Works
 
 - 1. A user registers by providing a name, email, password, and a clear face image. The system detects the face, extracts an embedding, and stores it in user_face_profiles with associated metadata.
 - 2. When an image is uploaded to the system, YOLOv8-face, SCRFD, RetinaFace, and MTCNN jointly detect faces, and high-quality crops are passed to InsightFace to generate embeddings.
 - 3. Each embedding is compared against stored user embeddings using FAISS/pgvector; if similarity exceeds a configurable threshold, a detection record is created and linked to a bad_actor profile based on uploader IP.
-- 4.The system sends email alerts to all matched users, including similarity score, detection time, and uploader IP, enabling the said users to review and act if the content is malicious.
+- 4. The system sends email alerts to all matched users, including similarity score, detection time, and uploader IP, enabling the said users to review and act if the content is malicious.
+<img width="975" height="548" alt="image" src="https://github.com/user-attachments/assets/deaa8ae7-4a49-4408-ac0e-1858f1f78b39" />
+<img width="975" height="548" alt="image" src="https://github.com/user-attachments/assets/808f6f36-8b56-43b2-8eba-a13d17fbde4b" />
 
+<a name="tech-stack"></a>
+## Tech Stack
 
+- **Backend**: Python, FastAPI, Hypercorn.
+- **Detection**: YOLOv8-face, SCRFD, RetinaFace, MTCNN.
+- **Embeddings**: InsightFace (ArcFace, buffalo_l models).
+- **Search**: FAISS, PostgreSQL + pgvector extension.
+- **Frontend**: HTML templates (Jinja2), basic CSS/JS.
+- **Notifications**: SMTP email integration (Gmail or custom SMTP).
+
+<a name="prerequisites"></a>
 ## Prerequisites
 
 1. Python 3.8 or higher
-2. PostgreSQL database with pgvector extension
-3. Virtual environment (recommended)
+2. PostgreSQL with pgvector extension installed
+3. YOLOv8 face model weights (yolov8x-face-lindevs.onnx)
+4. Virtual environment (recommended)
 
-<a name="custom-anchor-point"></a>
+<a name="installation"></a>
 ## Installation
 
 1. Create a virtual environment:
@@ -85,6 +102,7 @@ FaceGuard enables users to register their face once and then continuously monito
    - The application expects `yolov8x-face-lindevs.pt` in the root directory
    - You can download it from: https://github.com/akanametov/yolov8-face
 
+<a name="running-the-application"></a>
 ## Running the Application
 
 ```bash
@@ -93,6 +111,11 @@ python face_monitor_updated.py
 
 The application will start on `http://localhost:8000`
 
+<img width="975" height="397" alt="image" src="https://github.com/user-attachments/assets/f5f58466-4498-417d-a523-088623b2aa91" />
+<img width="975" height="341" alt="image" src="https://github.com/user-attachments/assets/ae5b19d0-3fca-4e40-92ce-ccdba9c5a514" />
+
+
+<a name="usage"></a>
 ## Usage
 
 1. Open your browser and go to `http://localhost:8000`
@@ -100,6 +123,12 @@ The application will start on `http://localhost:8000`
 3. Upload images using the "Upload Image for Face Detection" form
 4. View detections for a user using the "View User Detections" form
 
+<img width="975" height="446" alt="image" src="https://github.com/user-attachments/assets/ce071b07-0c53-4e5e-ae08-d508ec36c676" />
+<img width="975" height="334" alt="image" src="https://github.com/user-attachments/assets/7517edd7-8ab9-4d2a-8819-89b471434c7c" />
+<img width="948" height="533" alt="image" src="https://github.com/user-attachments/assets/422822a7-e83f-4719-9906-b3203443edde" />
+<img width="953" height="298" alt="image" src="https://github.com/user-attachments/assets/624ab143-6be8-4b5f-80c9-8432b5c7132a" />
+
+<a name="api-endpoints"></a>
 ## API Endpoints
 
 - `GET /` - Web interface
@@ -108,6 +137,25 @@ The application will start on `http://localhost:8000`
 - `GET /user/{user_id}/detections` - Get face detections for a user
 - `GET /image?path={path}` - Fetch an image by path
 
+<a name="database-schema"></a>
+## Database Schema
+- Core tables used by FaceGuard include:
+- users – Stores user accounts (id, username, email, password_hash, created_at).
+- user_face_profiles – Stores reference face images and corresponding embeddings for each user.
+- uploads – Logs image uploads (path, uploader IP, timestamps).
+- detections – Records face matches with similarity scores, timestamps, and notification status.
+- bad_actors – Tracks uploader IPs, upload_count, last_seen, and created_at for repeated suspicious uploads.
+
+<a name="monitoring-n-alerts"></a>
+## Monitoring & Alerts
+- When a face in an uploaded image matches a stored profile above the similarity threshold, a detection entry is created and the corresponding user is notified by email.
+- The email contains key details: detected user ID, similarity percentage, uploader IP, detection time, and links to review content.
+- This allows subscribers to quickly identify unauthorized use of their face in images and take action (e.g., content removal, legal steps).
+
+<img width="975" height="548" alt="image" src="https://github.com/user-attachments/assets/c610ea33-5dbe-49e7-b8e0-f2d670e417f6" />
+<img width="1078" height="681" alt="image" src="https://github.com/user-attachments/assets/3f73d64b-a314-4b3a-a40c-914d851180ed" />
+
+<a name="troubleshooting"></a>
 ## Troubleshooting
 
 1. If you get database connection errors, make sure:
