@@ -1,7 +1,21 @@
 # Face Guard - Face Monitoring System
 
-A face detection and monitoring system using InsightFace and YOLOv8 for facial recognition and monitoring.
-[Jump to the specific text](#custom-anchor-point)
+FaceGuard is a face detection and monitoring system that uses YOLOv8-based face detection and InsightFace (ArcFace) embeddings to continuously monitor uploaded images and alert registered users when their face appears in potentially malicious content.
+
+# Table of Contents
+- [Overview](#overview)
+- [Key Features](#key-features)
+- [System Architecture](#system-architecture)
+- [How It Works](#how-it-works) 
+- [Tech Stack](#tech-stack)
+- [Prerequisites](#prerequisites)
+- [Installation](#installation)
+- [Running the Application](#running-the-application)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Database Schema](#database-schema)
+- [Monitoring & Alerts](#monitoring-n-alerts)
+- [Troubleshooting](#troubleshooting)
 
 ## Features
 
