@@ -1,6 +1,7 @@
 # Face Guard - Face Monitoring System
 
 A face detection and monitoring system using InsightFace and YOLOv8 for facial recognition and monitoring.
+[Jump to the specific text](#custom-anchor-point)
 
 ## Features
 
@@ -16,6 +17,7 @@ A face detection and monitoring system using InsightFace and YOLOv8 for facial r
 2. PostgreSQL database with pgvector extension
 3. Virtual environment (recommended)
 
+<a name="custom-anchor-point"></a>
 ## Installation
 
 1. Create a virtual environment:
